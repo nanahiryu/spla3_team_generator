@@ -8,5 +8,6 @@ export const theme = extendTheme({
     splaPink: "#fd2996",
     splaOrange: "#f98620",
     splaBlue: "#1812ce",
+    splaYellow: "#e4fe00",
   },
 });
