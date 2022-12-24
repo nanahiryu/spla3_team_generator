@@ -1,9 +1,16 @@
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { Header } from "../components/organisms/Header";
+import { RankCard } from "../components/organisms/RankCard";
+import { RankStateType } from "../types/RankCard";
 
 export default function Home() {
-  const [userList, setUserList] = useState<Array<string>>(["a", "b", "c"]);
+  const demoRankStateList: RankStateType[] = [
+    { rankName: "X", rankColor: "splaTarcoids" },
+    { rankName: "S", rankColor: "splaBlue" },
+    { rankName: "A", rankColor: "splaPink" },
+    { rankName: "B", rankColor: "splaOrange" },
+  ];
   return (
     <>
       <Header />
@@ -18,32 +25,13 @@ export default function Home() {
           gap="2"
           py="4"
         >
-          <Flex
-            alignItems="center"
-            flexDirection="column"
-            w="80%"
-            maxW="800px"
-            gap="2"
-            py="4"
-            px="4"
-            bg="teal.400"
-            borderRadius="lg"
-          >
-            <Heading>Rank X</Heading>
-            {userList.map((user) => (
-              <Box
-                key={user}
-                bg="white"
-                w="80%"
-                p="4"
-                border="4px"
-                borderColor="teal.400"
-                borderRadius="lg"
-              >
-                <Text>{user}</Text>
-              </Box>
-            ))}
-          </Flex>
+          {demoRankStateList.map((rankState) => (
+            <RankCard
+              key={rankState.rankName}
+              rank={rankState.rankName}
+              rankColor={rankState.rankColor}
+            ></RankCard>
+          ))}
         </Flex>
       </main>
     </>
