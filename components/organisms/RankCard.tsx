@@ -17,6 +17,7 @@ type RankCardProps = {
   rankColor: string;
   rankStateList: RankStateType[];
   createNewMember: (rankId: number) => void;
+  deleteMember: (rankId: number, orderInRank: number) => void;
   onChangeUserName: (
     rankId: number,
     orderInRank: number,
@@ -30,6 +31,7 @@ export const RankCard = ({
   rankColor,
   rankStateList,
   createNewMember,
+  deleteMember,
   onChangeUserName,
 }: RankCardProps) => {
   const onCreateNewMember = useCallback(() => {
@@ -50,14 +52,24 @@ export const RankCard = ({
       <Heading color="white">Rank {rank}</Heading>
       <Stack spacing={6} my={2} w="90%">
         {rankStateList[id].userList.map((user, i) => (
-          <Input
-            key={i}
-            size="lg"
-            bgColor="white"
-            placeholder="メンバー名を入力"
-            value={user}
-            onChange={(e) => onChangeUserName(id, i, e)}
-          />
+          <Flex h={12} key={`${id}-${i}`} alignItems="center">
+            <Input
+              size="lg"
+              bgColor="white"
+              mr={2}
+              placeholder="メンバー名を入力"
+              value={user}
+              onChange={(e) => onChangeUserName(id, i, e)}
+            />
+            <Button
+              color="white"
+              bgColor="red"
+              h="100%"
+              onClick={() => deleteMember(id, i)}
+            >
+              del
+            </Button>
+          </Flex>
         ))}
         <Button onClick={onCreateNewMember}>plus</Button>
       </Stack>

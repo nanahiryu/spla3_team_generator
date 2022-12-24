@@ -48,6 +48,17 @@ export default function Home() {
       )
     );
   };
+  const deleteMember = (rankId: number, orderInRank: number) => {
+    let newUserList = [...rankStateList[rankId].userList];
+    newUserList.splice(orderInRank, 1);
+    setRankStateList(
+      rankStateList.map((rankState) =>
+        rankState.rankId === rankId
+          ? { ...rankState, userList: newUserList }
+          : rankState
+      )
+    );
+  };
   const onChangeUserName = (
     rankId: number,
     orderInRank: number,
@@ -82,6 +93,7 @@ export default function Home() {
               rankColor={rankState.rankColor}
               rankStateList={rankStateList}
               createNewMember={createNewMember}
+              deleteMember={deleteMember}
               onChangeUserName={onChangeUserName}
             ></RankCard>
           ) : (
