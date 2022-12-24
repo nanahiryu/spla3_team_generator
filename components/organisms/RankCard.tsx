@@ -71,7 +71,7 @@ export const RankCard = ({
             </Button>
           </Flex>
         ))}
-        <Button onClick={onCreateNewMember}>plus</Button>
+        <Button onClick={onCreateNewMember}>メンバーを追加</Button>
       </Stack>
     </Flex>
   );

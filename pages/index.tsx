@@ -101,7 +101,7 @@ export default function Home() {
           )
         )}
         <Button bgColor="teal.400" onClick={() => console.log(rankStateList)}>
-          Submit
+          チームを作成する
         </Button>
       </Flex>
     </>
