@@ -1,8 +1,10 @@
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import axios from "axios";
 import { useState } from "react";
 import { Header } from "../components/organisms/Header";
 import { RankCard } from "../components/organisms/RankCard";
 import { RankStateType } from "../types/RankCard";
+import { ReqTeamGrouping } from "../types/request/Team";
 
 export default function Home() {
   const demoRankStateList: RankStateType[] = [
@@ -78,6 +80,23 @@ export default function Home() {
       )
     );
   };
+  const postTeamMembers = () => {
+    let reqTeamGrouping: ReqTeamGrouping = { RankMembers: [] };
+    rankStateList.forEach((rankState) => {
+      let RankMembers: string[] = [];
+      rankState.userList.forEach((user) => {
+        if (user !== "") {
+          RankMembers.push(user);
+        }
+      });
+      reqTeamGrouping.RankMembers.push({
+        rankId: rankState.rankId,
+        rankName: rankState.rankName,
+        userList: RankMembers,
+      });
+    });
+    axios.post("/api/team", reqTeamGrouping);
+  };
   return (
     <>
       <Box m="8">
@@ -100,7 +119,7 @@ export default function Home() {
             <></>
           )
         )}
-        <Button bgColor="teal.400" onClick={() => console.log(rankStateList)}>
+        <Button bgColor="teal.400" onClick={() => postTeamMembers()}>
           チームを作成する
         </Button>
       </Flex>
