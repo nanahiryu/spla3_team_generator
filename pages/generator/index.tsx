@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
-import { Header } from "../components/organisms/Header";
-import { RankCard } from "../components/organisms/RankCard";
-import { useLoadings } from "../Hooks/useLoadings";
-import { RankStateType } from "../types/RankCard";
-import { ReqTeamGrouping } from "../types/request/Team";
+import { Header } from "../../components/organisms/Header";
+import { RankCard } from "../../components/organisms/RankCard";
+import { useLoadings } from "../../Hooks/useLoadings";
+import { RankStateType } from "../../types/RankCard";
+import { ReqTeamGrouping } from "../../types/request/Team";
 
 export default function Home() {
   const demoRankStateList: RankStateType[] = [
@@ -118,9 +118,6 @@ export default function Home() {
 
   return (
     <>
-      <Box m="8">
-        <Heading>spla team generator</Heading>
-      </Box>
       <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="4">
         {demoRankStateList.map((rankState) =>
           rankState.apperance ? (
