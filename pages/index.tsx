@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { Header } from "../components/organisms/Header";
@@ -118,29 +126,21 @@ export default function Home() {
 
   return (
     <>
-      <Box m="8">
-        <Heading>spla team generator</Heading>
-      </Box>
       <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="4">
-        {demoRankStateList.map((rankState) =>
-          rankState.apperance ? (
-            <RankCard
-              key={rankState.rankId}
-              id={rankState.rankId}
-              rank={rankState.rankName}
-              rankColor={rankState.rankColor}
-              rankStateList={rankStateList}
-              createNewMember={createNewMember}
-              deleteMember={deleteMember}
-              onChangeUserName={onChangeUserName}
-            ></RankCard>
-          ) : (
-            <></>
-          )
-        )}
-        <Button bgColor="teal.400" onClick={() => postTeamMembers()}>
-          チームを作成する
-        </Button>
+        <Box>
+          <Text>Log in</Text>
+        </Box>
+        <Box>
+          <Flex alignItems="center">
+            <Text>email</Text>
+            <Input />
+          </Flex>
+          <Flex alignItems="center">
+            <Text>password</Text>
+            <Input />
+          </Flex>
+        </Box>
+        <Box></Box>
       </Flex>
     </>
   );
