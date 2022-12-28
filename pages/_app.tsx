@@ -7,6 +7,7 @@ import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useLoadings } from "../Hooks/useLoadings";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   const { pathname, push } = useRouter();
@@ -39,6 +40,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ChakraProvider theme={theme}>
+      <Head>
+        <title>spla3 team generator</title>
+      </Head>
       <Header />
       <Component {...pageProps} />
     </ChakraProvider>
