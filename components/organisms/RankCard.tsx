@@ -48,6 +48,7 @@ export const RankCard = ({
       px="4"
       bg={rankColor}
       borderRadius="lg"
+      shadow="md"
     >
       <Heading color="white">Rank {rank}</Heading>
       <Stack spacing={6} my={2} w="90%">
@@ -71,7 +72,11 @@ export const RankCard = ({
             </Button>
           </Flex>
         ))}
-        <Button onClick={onCreateNewMember}>メンバーを追加</Button>
+        <Flex maxW="100%" alignItems="center" justifyContent="center">
+          <Button bgColor="white" onClick={onCreateNewMember}>
+            メンバーを追加
+          </Button>
+        </Flex>
       </Stack>
     </Flex>
   );
