@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { supabase } from "../utils/supabase";
-import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Text, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
 type IForm = {
@@ -9,8 +9,33 @@ type IForm = {
 };
 
 const Signup: NextPage = () => {
+  const toast = useToast();
   const handleSignup = ({ email, password }: IForm) => {
-    supabase.auth.signUp({ email, password });
+    supabase.auth
+      .signUp({ email, password })
+      .then((res) => {
+        // TODO: ログイン画面へ遷移 && メール送信のメッセージを表示
+        toast({
+          title: "Sign up 成功",
+          description: "メールを送信したので認証を完了してください",
+          status: "success",
+          duration: 10000,
+          isClosable: true,
+          position: "top",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        // TODO: chakra toast でエラーを表示
+        toast({
+          title: "Sign up エラー",
+          description: "サインアップに失敗しました",
+          status: "error",
+          duration: 10000,
+          isClosable: true,
+          position: "top",
+        });
+      });
   };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
