@@ -8,6 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
+import Link from "next/link";
 import { useState } from "react";
 import { Header } from "../components/organisms/Header";
 import { RankCard } from "../components/organisms/RankCard";
@@ -128,19 +129,11 @@ export default function Home() {
     <>
       <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="4">
         <Box>
-          <Text>Log in</Text>
+          <Text fontSize="6xl">Home</Text>
         </Box>
         <Box>
-          <Flex alignItems="center">
-            <Text>email</Text>
-            <Input />
-          </Flex>
-          <Flex alignItems="center">
-            <Text>password</Text>
-            <Input />
-          </Flex>
+          <Link href="/generator">generatorへ</Link>
         </Box>
-        <Box></Box>
       </Flex>
     </>
   );
