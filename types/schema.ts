@@ -60,14 +60,17 @@ export interface Database {
       ranks: {
         Row: {
           name: string
+          rank_color: string
           uuid: string
         }
         Insert: {
           name: string
+          rank_color: string
           uuid?: string
         }
         Update: {
           name?: string
+          rank_color?: string
           uuid?: string
         }
       }
