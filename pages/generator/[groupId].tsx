@@ -11,6 +11,7 @@ import { supabase } from "../../utils/supabase";
 import { useAtom } from "jotai";
 import { LoadSpinner } from "../../components/atoms/loadSpinner";
 import { Player } from "../../types/RankCard";
+import { TeamResultsCard } from "../../components/organisms/TeamResultsCard";
 
 type TeamData = {
   alpha: Player[];
@@ -18,74 +19,87 @@ type TeamData = {
 };
 
 export default function Generator() {
-  const demoRankStateList: RankStateType[] = [
-    {
-      rankId: 0,
-      rankName: "X",
-      rankColor: "splaBlue",
-      apperance: true,
-      userList: ["", "", "", ""],
-    },
-    {
-      rankId: 1,
-      rankName: "S",
-      rankColor: "splaLimeGreen",
-      apperance: true,
-      userList: ["", ""],
-    },
-    {
-      rankId: 2,
-      rankName: "A",
-      rankColor: "splaTarcoids",
-      apperance: false,
-      userList: ["", ""],
-    },
-    {
-      rankId: 3,
-      rankName: "B",
-      rankColor: "splaOrange",
-      apperance: false,
-      userList: ["", ""],
-    },
-  ];
   const { loading, startLoading, stopLoading } = useLoadings();
-  const [rankStateList, setRankStateList] =
-    useState<RankStateType[]>(demoRankStateList);
+  const [rankStateList, setRankStateList] = useState<RankStateType[]>([]);
   // const [userAuth, setUserAuth] = useAuthUser();
   const [respTeamData, setRespTeamData] = useState<TeamData>();
   const router = useRouter();
   const { groupId } = router.query;
-  const createNewMember = (rankId: number) => {
-    let newUserList = [...rankStateList[rankId].userList];
+  // rankStateListの初期化
+  useEffect(() => {
+    (async () => {
+      console.log("async");
+      try {
+        startLoading();
+        const { data } = await supabase.from("ranks").select();
+        console.log(data);
+        let newRankStateList: RankStateType[] = [];
+        data?.forEach((rank) => {
+          if (rank.name === "X" || rank.name === "S") {
+            newRankStateList.push({
+              uuid: rank.uuid,
+              rankName: rank.name,
+              rankColor: rank.rank_color,
+              userList: ["", ""],
+            });
+          } else {
+            newRankStateList.push({
+              uuid: rank.uuid,
+              rankName: rank.name,
+              rankColor: rank.rank_color,
+              userList: [],
+            });
+          }
+        });
+        setRankStateList(newRankStateList);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        stopLoading();
+      }
+    })();
+    console.log("rankStateList:");
+    console.log(rankStateList);
+  }, []);
+  const createNewMember = (rankId: string) => {
+    let newUserList = [
+      ...rankStateList.find((rankState) => {
+        rankState.uuid === rankId;
+      })!.userList,
+    ];
     newUserList.push("");
     setRankStateList(
       rankStateList.map((rankState) =>
-        rankState.rankId === rankId
+        rankState.uuid === rankId
           ? { ...rankState, userList: newUserList }
           : rankState
       )
     );
   };
-  const deleteMember = (rankId: number, orderInRank: number) => {
-    let newUserList = [...rankStateList[rankId].userList];
+  const deleteMember = (rankId: string, orderInRank: number) => {
+    let newUserList = [
+      ...rankStateList.find((rankState) => {
+        rankState.uuid === rankId;
+      })!.userList,
+    ];
     newUserList.splice(orderInRank, 1);
     setRankStateList(
       rankStateList.map((rankState) =>
-        rankState.rankId === rankId
+        rankState.uuid === rankId
           ? { ...rankState, userList: newUserList }
           : rankState
       )
     );
   };
   const onChangeUserName = (
-    rankId: number,
+    rankId: string,
     orderInRank: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const newUserName = e.target.value;
     setRankStateList(
       rankStateList.map((rankState) =>
-        rankState.rankId === rankId
+        rankState.uuid === rankId
           ? {
               ...rankState,
               userList: rankState.userList.map((user, i) =>
@@ -106,7 +120,7 @@ export default function Generator() {
         }
       });
       reqTeamGrouping.RankMembers.push({
-        rankId: rankState.rankId,
+        rankId: rankState.uuid,
         rankName: rankState.rankName,
         userList: RankMembers,
       });
@@ -135,11 +149,37 @@ export default function Generator() {
 
   return (
     <>
-      <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="4">
+      <Flex alignItems="center" w="100%" gap="4" py="4">
         {loading ? (
           <LoadSpinner />
         ) : (
           <>
+            <Flex
+              alignItems="center"
+              w="100%"
+              flexDirection="column"
+              gap="4"
+              py="4"
+            >
+              <Heading>チーム作成</Heading>
+              {rankStateList.length !== 0 &&
+                rankStateList.map((rankState) => (
+                  <RankCard
+                    key={rankState.uuid}
+                    id={rankState.uuid}
+                    rank={rankState.rankName}
+                    rankColor={rankState.rankColor}
+                    rankStateList={rankStateList}
+                    rankState={rankState}
+                    createNewMember={createNewMember}
+                    deleteMember={deleteMember}
+                    onChangeUserName={onChangeUserName}
+                  ></RankCard>
+                ))}
+              <Button bgColor="teal.400" onClick={() => postTeamMembers()}>
+                チームを作成する
+              </Button>
+            </Flex>
             {respTeamData && (
               <Flex
                 alignItems="center"
@@ -149,83 +189,18 @@ export default function Generator() {
                 mb="16"
                 py="4"
               >
-                <Heading>チーム分け</Heading>
-                <Flex
-                  alignItems="center"
-                  flexDirection="column"
-                  w="80%"
-                  maxW="800px"
-                  gap="2"
-                  py="4"
-                  px="4"
-                  bg="pink.500"
-                  borderRadius="lg"
-                  shadow="md"
-                >
-                  <Heading color="white">team alpha</Heading>
-                  <Stack spacing={6} my={2} w="90%">
-                    {respTeamData.alpha.map((user) => (
-                      <Flex
-                        h={12}
-                        key={`user-${user.playerId}`}
-                        alignItems="center"
-                      >
-                        <Box bg="white" borderRadius="lg" w="100%" px="4">
-                          <Text fontSize="2xl">{user.playerName}</Text>
-                        </Box>
-                      </Flex>
-                    ))}
-                  </Stack>
-                </Flex>
-                <Flex
-                  alignItems="center"
-                  flexDirection="column"
-                  w="80%"
-                  maxW="800px"
-                  gap="2"
-                  py="4"
-                  px="4"
-                  bg="pink.500"
-                  borderRadius="lg"
-                  shadow="md"
-                >
-                  <Heading color="white">team bravo</Heading>
-                  <Stack spacing={6} my={2} w="90%">
-                    {respTeamData.bravo.map((user) => (
-                      <Flex
-                        h={12}
-                        key={`user-${user.playerId}`}
-                        alignItems="center"
-                      >
-                        <Box bg="white" borderRadius="lg" w="100%" px="4">
-                          <Text fontSize="2xl">{user.playerName}</Text>
-                        </Box>
-                      </Flex>
-                    ))}
-                  </Stack>
-                </Flex>
+                <Heading>チーム分け結果</Heading>
+                <TeamResultsCard
+                  teamName="alpha"
+                  teamMembers={respTeamData.alpha}
+                />
+                <TeamResultsCard
+                  teamName="bravo"
+                  teamMembers={respTeamData.bravo}
+                />
                 <Button bgColor="teal.400">もう一度振り分ける</Button>
               </Flex>
             )}
-            {demoRankStateList.map((rankState) =>
-              rankState.apperance ? (
-                <RankCard
-                  key={rankState.rankId}
-                  id={rankState.rankId}
-                  rank={rankState.rankName}
-                  rankColor={rankState.rankColor}
-                  rankStateList={rankStateList}
-                  createNewMember={createNewMember}
-                  deleteMember={deleteMember}
-                  onChangeUserName={onChangeUserName}
-                ></RankCard>
-              ) : (
-                <></>
-              )
-            )}
-            <Button bgColor="teal.400" onClick={() => postTeamMembers()}>
-              チームを作成する
-            </Button>
           </>
         )}
       </Flex>

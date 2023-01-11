@@ -12,14 +12,15 @@ import React, { useCallback, useState } from "react";
 import { RankStateType } from "../../types/RankCard";
 
 type RankCardProps = {
-  id: number;
+  id: string;
   rank: string;
   rankColor: string;
   rankStateList: RankStateType[];
-  createNewMember: (rankId: number) => void;
-  deleteMember: (rankId: number, orderInRank: number) => void;
+  rankState: RankStateType;
+  createNewMember: (rankId: string) => void;
+  deleteMember: (rankId: string, orderInRank: number) => void;
   onChangeUserName: (
-    rankId: number,
+    rankId: string,
     orderInRank: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
@@ -30,6 +31,7 @@ export const RankCard = ({
   rank,
   rankColor,
   rankStateList,
+  rankState,
   createNewMember,
   deleteMember,
   onChangeUserName,
@@ -52,7 +54,7 @@ export const RankCard = ({
     >
       <Heading color="white">Rank {rank}</Heading>
       <Stack spacing={6} my={2} w="90%">
-        {rankStateList[id].userList.map((user, i) => (
+        {rankState.userList.map((user, i) => (
           <Flex h={12} key={`${id}-${i}`} alignItems="center">
             <Input
               size="lg"
