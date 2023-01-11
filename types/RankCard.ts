@@ -1,8 +1,7 @@
 export type RankStateType = {
-  rankId: number;
+  uuid: string;
   rankName: string;
   rankColor: string;
-  apperance: boolean;
   userList: string[];
 };
 
