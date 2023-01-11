@@ -14,10 +14,13 @@ import { useEffect, useState } from "react";
 import { useAuthUser } from "../Atoms";
 import { useLoadings } from "../Hooks/useLoadings";
 import { RankStateType } from "../types/RankCard";
+import { supabase } from "../utils/supabase";
+import { Database } from "../types/schema";
 
 export default function Home() {
   // const [userAuth, setUserAuth] = useAuthUser();
-  // const router = useRouter();
+  const [groupName, setGroupName] = useState("");
+  const router = useRouter();
   const { loading, startLoading, stopLoading } = useLoadings();
 
   // useEffect(() => {
@@ -26,6 +29,31 @@ export default function Home() {
   //   }
   //   console.log(userAuth);
   // });
+
+  const onClickCreateNewGroup = async () => {
+    try {
+      const { data } = await supabase
+        .from("groups")
+        .insert({ name: groupName })
+        .select();
+      // データがない場合はreturn
+      if (!data || !data[0]) {
+        console.log("data is not exist");
+        return;
+      }
+      // uuidを使って動的ルーティング
+      router.push({
+        pathname: `/generator/${data[0].uuid}`,
+        query: { groupId: data[0].uuid },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onChangeGroupName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGroupName(e.target.value);
+  };
 
   if (loading) {
     return (
@@ -49,9 +77,18 @@ export default function Home() {
         <Box>
           <Text fontSize="6xl">Home</Text>
         </Box>
-        <Box>
-          <Link href="/generator">generatorへ</Link>
-        </Box>
+        <Flex flexDirection="column" gap="4" w="80">
+          <Input
+            placeholder="作成するチームの名前を入力"
+            value={groupName}
+            onChange={(e) => onChangeGroupName(e)}
+            bgColor="white"
+            size="lg"
+          />
+          <Button bgColor="teal.400" size="lg" onClick={onClickCreateNewGroup}>
+            generatorへ
+          </Button>
+        </Flex>
       </Flex>
     </>
   );

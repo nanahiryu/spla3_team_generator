@@ -54,6 +54,7 @@ export default function Generator() {
   // const [userAuth, setUserAuth] = useAuthUser();
   const [respTeamData, setRespTeamData] = useState<TeamData>();
   const router = useRouter();
+  const { groupId } = router.query;
   const createNewMember = (rankId: number) => {
     let newUserList = [...rankStateList[rankId].userList];
     newUserList.push("");
