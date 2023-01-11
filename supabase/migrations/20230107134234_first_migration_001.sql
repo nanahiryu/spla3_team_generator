@@ -22,7 +22,8 @@ CREATE TABLE "member_rank" (
 
 CREATE TABLE "ranks" (
   "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
-  "name" varchar NOT NULL
+  "name" varchar NOT NULL,
+  "rank_color" varchar NOT NULL
 );
 
 CREATE TABLE "team_log" (

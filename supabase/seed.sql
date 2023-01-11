@@ -5,10 +5,9 @@ VALUES
 ('観戦'),
 ('休み');
 
-INSERT INTO public.ranks (name)
+INSERT INTO public.ranks (name, rank_color)
 VALUES
-('X'),
-('S'),
-('A'),
-('B'),
-('C');
+('X', 'splaBlue'),
+('S', 'splaLimeGreen'),
+('A', 'splaTarcoids'),
+('B', 'splaOrange');
