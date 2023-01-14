@@ -26,11 +26,21 @@ CREATE TABLE "ranks" (
   "rank_color" varchar NOT NULL
 );
 
-CREATE TABLE "team_log" (
+CREATE TABLE "team_member_log" (
   "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
   "member_id" uuid NOT NULL,
+  "team_log_id" uuid NOT NULL
+);
+
+CREATE TABLE "team_log" (
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
   "team_id" uuid NOT NULL,
-  "created_at" TIMESTAMP NOT NULL
+  "team_set_id" uuid NOT NULL
+);
+
+CREATE TABLE "team_log_set" (
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
+  "created_at" datetime NOT NULL
 );
 
 CREATE TABLE "teams" (
@@ -46,6 +56,10 @@ ALTER TABLE "member_rank" ADD FOREIGN KEY ("rank_id") REFERENCES "ranks" ("uuid"
 
 ALTER TABLE "member_rank" ADD FOREIGN KEY ("member_id") REFERENCES "group_members" ("uuid");
 
-ALTER TABLE "team_log" ADD FOREIGN KEY ("member_id") REFERENCES "group_members" ("uuid");
+ALTER TABLE "team_member_log" ADD FOREIGN KEY ("member_id") REFERENCES "group_members" ("uuid");
+
+ALTER TABLE "team_member_log" ADD FOREIGN KEY ("team_log_id") REFERENCES "team_log" ("uuid");
 
 ALTER TABLE "team_log" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("uuid");
+
+ALTER TABLE "team_log" ADD FOREIGN KEY ("team_set_id") REFERENCES "team_log_set" ("uuid");
