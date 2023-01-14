@@ -40,7 +40,7 @@ CREATE TABLE "team_log" (
 
 CREATE TABLE "team_log_set" (
   "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
-  "created_at" datetime NOT NULL
+  "created_at" TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "teams" (
