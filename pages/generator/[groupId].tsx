@@ -12,19 +12,25 @@ import { useAtom } from "jotai";
 import { LoadSpinner } from "../../components/atoms/loadSpinner";
 import { Player } from "../../types/RankCard";
 import { TeamResultsCard } from "../../components/organisms/TeamResultsCard";
+import { useGenerateTeam } from "../../Hooks/useGenerateTeam";
 
-type TeamData = {
+export type TeamData = {
   alpha: Player[];
   bravo: Player[];
 };
 
 export default function Generator() {
+  const router = useRouter();
+  const { groupId } = router.query;
   const { loading, startLoading, stopLoading } = useLoadings();
   const [rankStateList, setRankStateList] = useState<RankStateType[]>([]);
   // const [userAuth, setUserAuth] = useAuthUser();
   const [respTeamData, setRespTeamData] = useState<TeamData>();
-  const router = useRouter();
-  const { groupId } = router.query;
+  const { getNewTeamData } = useGenerateTeam({
+    setTeamData: setRespTeamData,
+    groupId: groupId,
+  });
+
   // rankStateListの初期化
   useEffect(() => {
     (async () => {
@@ -40,7 +46,10 @@ export default function Generator() {
               uuid: rank.uuid,
               rankName: rank.name,
               rankColor: rank.rank_color,
-              userList: ["", ""],
+              userList: [
+                { playerId: "", playerName: "" },
+                { playerId: "", playerName: "" },
+              ],
             });
           } else {
             newRankStateList.push({
@@ -67,7 +76,7 @@ export default function Generator() {
         rankState.uuid === rankId;
       })!.userList,
     ];
-    newUserList.push("");
+    newUserList.push({ playerId: "", playerName: "" });
     setRankStateList(
       rankStateList.map((rankState) =>
         rankState.uuid === rankId
@@ -103,19 +112,20 @@ export default function Generator() {
           ? {
               ...rankState,
               userList: rankState.userList.map((user, i) =>
-                i === orderInRank ? newUserName : user
+                i === orderInRank ? { ...user, playerName: newUserName } : user
               ),
             }
           : rankState
       )
     );
   };
+
   const postTeamMembers = () => {
     let reqTeamGrouping: ReqTeamGrouping = { RankMembers: [] };
     rankStateList.forEach((rankState) => {
-      let RankMembers: string[] = [];
+      let RankMembers: Player[] = [];
       rankState.userList.forEach((user) => {
-        if (user !== "") {
+        if (user.playerName !== "") {
           RankMembers.push(user);
         }
       });
@@ -126,17 +136,22 @@ export default function Generator() {
       });
     });
     startLoading();
-    console.log(loading);
-    axios
-      .post("/api/team", reqTeamGrouping)
-      .then((res) => {
-        console.log(res);
-        setRespTeamData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log(loading);
+    const { alpha, bravo } = getNewTeamData(reqTeamGrouping);
+    setRespTeamData({ alpha: alpha, bravo: bravo });
+    // getNewTeamData(reqTeamGrouping).then((res) => {
+    //   setRespTeamData({ alpha: res.alpha, bravo: res.bravo });
+    //   console.log("res:", respTeamData);
+    // });
+    // axios
+    //   .post("/api/team", reqTeamGrouping)
+    //   .then((res) => {
+    //     console.log(res);
+    //     setRespTeamData(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // console.log(loading);
     stopLoading();
   };
 

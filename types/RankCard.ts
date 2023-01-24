@@ -2,10 +2,10 @@ export type RankStateType = {
   uuid: string;
   rankName: string;
   rankColor: string;
-  userList: string[];
+  userList: Player[];
 };
 
 export type Player = {
-  playerId: number;
+  playerId: string;
   playerName: string;
 };

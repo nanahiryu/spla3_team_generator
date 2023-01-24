@@ -61,7 +61,7 @@ export const RankCard = ({
               bgColor="white"
               mr={2}
               placeholder="メンバー名を入力"
-              value={user}
+              value={user.playerName}
               onChange={(e) => onChangeUserName(id, i, e)}
             />
             <Button

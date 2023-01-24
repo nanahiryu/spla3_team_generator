@@ -27,7 +27,7 @@ export const TeamResultsCard = ({
       <Heading color="white">team {teamName}</Heading>
       <Stack spacing={6} my={2} w="90%">
         {teamMembers.map((user) => (
-          <Flex h={12} key={`user-${user.playerId}`} alignItems="center">
+          <Flex h={12} key={user.playerId} alignItems="center">
             <Box bg="white" borderRadius="lg" w="100%" px="4">
               <Text fontSize="2xl">{user.playerName}</Text>
             </Box>

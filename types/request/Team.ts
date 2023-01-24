@@ -7,5 +7,5 @@ export type ReqTeamGrouping = {
 export type RankMembers = {
   rankId: string;
   rankName: string;
-  userList: string[];
+  userList: Player[];
 };
