@@ -15,7 +15,7 @@ type GenerateTeamProps = {
 type TeamName = {
   uuid: string;
   name: string;
-}
+};
 
 export const useGenerateTeam = ({
   setTeamData,
@@ -29,9 +29,7 @@ export const useGenerateTeam = ({
   const [teamsNameData, setTeamsNameData] = useState<TeamName[]>();
   useEffect(() => {
     const getTeamsName = async () => {
-      const res = await supabase
-        .from("teams")
-        .select("*");
+      const res = await supabase.from("teams").select("*");
       if (res.data) {
         setTeamsNameData(res.data);
       }
@@ -200,6 +198,7 @@ export const useGenerateTeam = ({
   };
 
   // fetchTeamMemberLogLimit8を定義
+  // TODO: joinを用いた実装と比較してどちらが速いか検証
   const fetchTeamMemberLogLimit8 = async () => {
     // team_log_setから過去最大8回分のデータを取得
     const { data: teamLogSetData, error: teamLogSetDataErr } = await supabase
@@ -273,7 +272,7 @@ export const useGenerateTeam = ({
     // 被り排除のロジック
     const bravoMembers: Player[] = [];
     const alphaMembers: Player[] = [];
-    // 初回(prevMathingData.length === 0)
+    // 初回(prevMathingData.length === 0)の時newMembersから順番にチームを決定
     if (prevMatchingData?.length === 0) {
       newMembers.forEach((rank) => {
         rank.userList.forEach((user) => {
@@ -297,7 +296,9 @@ export const useGenerateTeam = ({
       const counter = matchingCounter(prevMatchingData);
       // 集計結果からチームを決定
       newMembers.forEach((rank) => {
+        // 各ランクのユーザーを順番にチームに割り振っていく
         let tempUserList = rank.userList;
+        // 最初はランダムで
         if (alphaMembers.length === 0) {
           const randInt = getRandomInt(tempUserList.length);
           alphaMembers.push({
@@ -306,12 +307,14 @@ export const useGenerateTeam = ({
           });
           tempUserList.splice(randInt, 1);
         }
+        // 指定したランクのユーザーがいなくなるまで振り分ける
+        // KP: 被りポイントが最も少ないメンバーをチームに割り振るようにする
         while (tempUserList.length > 0) {
           let minKP = 1000;
           let indexForSplice = 0;
           let minKPUUID = "";
           let minKPUserName = "";
-          if (bravoMembers.length <= alphaMembers.length) {
+          if (bravoMembers.length < alphaMembers.length) {
             // bravoMembersに入れる
             tempUserList.forEach((user, i) => {
               let KP = 0;
@@ -359,17 +362,52 @@ export const useGenerateTeam = ({
         return;
       }
       const { uuid: teamLogSetId } = res.data[0];
-      insertTeamLog({ team_set_id: teamLogSetId, team_id:  }).then((res) => {
+
+      // alphaのログをinsert
+      const alphaTeamId = teamsNameData?.filter(
+        (team) => (team.name = "アルファ")
+      )[0].uuid;
+      if (!alphaTeamId) {
+        console.log("alphaTeamId is undefined");
+        return;
+      }
+      insertTeamLog(alphaTeamId, teamLogSetId).then((res) => {
         if (res.error) {
           console.log(res.error);
           return;
         }
-        const teamLogId = res.data;
-        insertTeamMemberLog(teamLogId).then((res) => {
-          if (res.error) {
-            console.log(res.error);
-            return;
-          }
+        const teamLogId = res.data[0];
+        alphaMembers.forEach((member) => {
+          insertTeamMemberLog(member.playerId, teamLogId.uuid).then((res) => {
+            if (res.error) {
+              console.log(res.error);
+              return;
+            }
+          });
+        });
+      });
+
+      // bravoのログをinsert
+      const bravoTeamId = teamsNameData?.filter(
+        (team) => (team.name = "ブラボー")
+      )[0].uuid;
+      if (!bravoTeamId) {
+        console.log("bravoTeamId is undefined");
+        return;
+      }
+      insertTeamLog(bravoTeamId, teamLogSetId).then((res) => {
+        if (res.error) {
+          console.log(res.error);
+          return;
+        }
+        const teamLogId = res.data[0];
+        bravoMembers.forEach((member) => {
+          insertTeamMemberLog(member.playerId, teamLogId.uuid).then((res) => {
+            if (res.error) {
+              console.log(res.error);
+              return;
+            }
+          });
         });
       });
     });
