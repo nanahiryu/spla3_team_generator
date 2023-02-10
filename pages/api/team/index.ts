@@ -12,8 +12,8 @@ const teamApi = (
   const members: ReqTeamGrouping = req.body;
   console.log(members);
   let playerId = 0;
-  members.RankMembers.forEach((rank) => {
-    rank.userList.forEach((user) => {
+  members.RankMembers.forEach((rankMember) => {
+    rankMember.userList.forEach((user) => {
       if (bravoMembers.length <= alphaMembers.length) {
         bravoMembers.push({ playerId: playerId, playerName: user });
       } else {
