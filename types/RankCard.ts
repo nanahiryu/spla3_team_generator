@@ -6,6 +6,23 @@ export type RankStateType = {
 };
 
 export type Player = {
-  playerId: number;
+  playerId: string;
   playerName: string;
+};
+
+export type Member = Player & {
+  memberId: string;
+};
+
+export type rankAndPlayer = {
+  rankId: string;
+  rankName: string;
+  memberId: string;
+  Player: Player;
+};
+
+export type MemberLog = {
+  member_id: string;
+  team_id: number;
+  team_set_id: string;
 };

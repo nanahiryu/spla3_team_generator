@@ -111,7 +111,14 @@ export default function Generator() {
     );
   };
   const postTeamMembers = () => {
-    let reqTeamGrouping: ReqTeamGrouping = { RankMembers: [] };
+    if (typeof groupId !== "string") {
+      console.log("error: groupId is not string");
+      return;
+    }
+    let reqTeamGrouping: ReqTeamGrouping = {
+      RankMembers: [],
+      groupId: groupId,
+    };
     rankStateList.forEach((rankState) => {
       let RankMembers: string[] = [];
       rankState.userList.forEach((user) => {
