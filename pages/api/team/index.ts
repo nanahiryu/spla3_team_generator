@@ -12,6 +12,7 @@ import {
   RespTeamGrouping,
 } from "../../../types/response/Team";
 import { supabase } from "../../../utils/supabase";
+import { setTeamLog } from "../../utils/teamLogSetter";
 
 const createTeamApi = async (
   req: NextApiRequest,
@@ -109,36 +110,7 @@ const createTeamApi = async (
     });
 
     // DBにteam_logを保存する処理
-    // team_log_set
-    const { data: data4, error: error4 } = await supabase
-      .from("team_log_set")
-      .insert({})
-      .select();
-    if (error4) {
-      throw error4;
-    }
-    // team_member_log
-    const membersLog: MemberLog[] = [];
-    bravoMembers.forEach((member) => {
-      membersLog.push({
-        member_id: member.memberId,
-        team_id: 1,
-        team_set_id: data4![0].uuid,
-      });
-    });
-    alphaMembers.forEach((member) => {
-      membersLog.push({
-        member_id: member.memberId,
-        team_id: 0,
-        team_set_id: data4![0].uuid,
-      });
-    });
-    const { data: data5, error: error5 } = await supabase
-      .from("team_member_log")
-      .insert(membersLog);
-    if (error5) {
-      throw error5;
-    }
+    await setTeamLog(bravoMembers, alphaMembers);
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
