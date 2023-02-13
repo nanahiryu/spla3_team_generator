@@ -74,37 +74,37 @@ export interface Database {
           uuid?: string
         }
       }
-      team_log: {
+      team_log_set: {
         Row: {
           created_at: string
-          member_id: string
-          team_id: string
           uuid: string
         }
         Insert: {
-          created_at: string
-          member_id: string
-          team_id: string
+          created_at?: string
           uuid?: string
         }
         Update: {
           created_at?: string
-          member_id?: string
-          team_id?: string
           uuid?: string
         }
       }
-      teams: {
+      team_member_log: {
         Row: {
-          name: string
+          member_id: string
+          team_id: number
+          team_set_id: string
           uuid: string
         }
         Insert: {
-          name: string
+          member_id: string
+          team_id: number
+          team_set_id: string
           uuid?: string
         }
         Update: {
-          name?: string
+          member_id?: string
+          team_id?: number
+          team_set_id?: string
           uuid?: string
         }
       }
