@@ -1,7 +1,7 @@
-import { Member, MemberLog } from "../../types/RankCard";
-import { supabase } from "../../utils/supabase";
+import { Member, MemberLog } from "../types/RankCard";
+import { supabase } from "./supabase";
 
-const setTeamLog = (bravoMembers: Member[], alphaMembers: Member[]) => {
+export const setTeamLog = (bravoMembers: Member[], alphaMembers: Member[]) => {
   // team_log_set
   return new Promise(async (resolve, reject) => {
     const { data: data4, error: error4 } = await supabase
@@ -36,5 +36,3 @@ const setTeamLog = (bravoMembers: Member[], alphaMembers: Member[]) => {
     resolve(membersLog);
   });
 };
-
-export default setTeamLog;
