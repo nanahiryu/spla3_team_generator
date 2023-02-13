@@ -12,7 +12,7 @@ import {
   RespTeamGrouping,
 } from "../../../types/response/Team";
 import { supabase } from "../../../utils/supabase";
-import { setTeamLog } from "../../../utils/teamLogSetter";
+import { setTeamLog } from "../../../utils/team/setTeamLog";
 
 const createTeamApi = async (
   req: NextApiRequest,

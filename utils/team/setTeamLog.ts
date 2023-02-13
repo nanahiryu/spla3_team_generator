@@ -1,5 +1,5 @@
-import { Member, MemberLog } from "../types/RankCard";
-import { supabase } from "./supabase";
+import { Member, MemberLog } from "../../types/RankCard";
+import { supabase } from "../supabase";
 
 export const setTeamLog = (bravoMembers: Member[], alphaMembers: Member[]) => {
   // team_log_set
