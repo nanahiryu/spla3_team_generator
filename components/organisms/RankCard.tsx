@@ -42,22 +42,33 @@ export const RankCard = ({
   return (
     <Flex
       alignItems="center"
-      flexDirection="column"
       w="80%"
       maxW="800px"
       gap="2"
       py="4"
-      px="4"
+      px="8"
       bg={rankColor}
       borderRadius="lg"
       shadow="md"
     >
-      <Heading color="white">Rank {rank}</Heading>
+      <Box alignItems="center" justifyContent="center" mr="8">
+        <Flex alignItems="center" justifyContent="center">
+          <Text color="white" fontSize="3xl" fontWeight="bold">
+            Rank {rank}
+          </Text>
+        </Flex>
+        <Flex maxW="100%" alignItems="center" justifyContent="center">
+          <Button bgColor="white" onClick={onCreateNewMember}>
+            メンバーを追加
+          </Button>
+        </Flex>
+      </Box>
       <Stack spacing={6} my={2} w="90%">
         {rankState.userList.map((user, i) => (
           <Flex h={12} key={`${id}-${i}`} alignItems="center">
             <Input
               size="lg"
+              fontSize="2xl"
               bgColor="white"
               mr={2}
               placeholder="メンバー名を入力"
@@ -74,11 +85,6 @@ export const RankCard = ({
             </Button>
           </Flex>
         ))}
-        <Flex maxW="100%" alignItems="center" justifyContent="center">
-          <Button bgColor="white" onClick={onCreateNewMember}>
-            メンバーを追加
-          </Button>
-        </Flex>
       </Stack>
     </Flex>
   );
