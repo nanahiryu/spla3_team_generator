@@ -63,12 +63,15 @@ export default function Generator() {
   }, []);
 
   const createNewMember = (rankId: string) => {
-    let newUserList = [
-      ...rankStateList.find((rankState) => {
-        rankState.uuid === rankId;
-      })!.userList,
-    ];
+    let newUserList: string[] = [];
+    const selectedRankState = rankStateList.find((rankState) => {
+      return rankState.uuid === rankId;
+    });
+    if (selectedRankState) {
+      newUserList = [...selectedRankState.userList];
+    }
     newUserList.push("");
+    console.log("newUserList", newUserList);
     setRankStateList(
       rankStateList.map((rankState) =>
         rankState.uuid === rankId
@@ -77,12 +80,15 @@ export default function Generator() {
       )
     );
   };
+
   const deleteMember = (rankId: string, orderInRank: number) => {
-    let newUserList = [
-      ...rankStateList.find((rankState) => {
-        rankState.uuid === rankId;
-      })!.userList,
-    ];
+    let newUserList: string[] = [];
+    const selectedRankState = rankStateList.find((rankState) => {
+      return rankState.uuid === rankId;
+    });
+    if (selectedRankState) {
+      newUserList = [...selectedRankState.userList];
+    }
     newUserList.splice(orderInRank, 1);
     setRankStateList(
       rankStateList.map((rankState) =>
