@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -10,7 +10,6 @@ import { ReqTeamGrouping } from "../../types/request/Team";
 import { supabase } from "../../utils/supabase";
 import { useAtom } from "jotai";
 import { LoadSpinner } from "../../components/atoms/loadSpinner";
-import { Player } from "../../types/RankCard";
 import { TeamResultsCard } from "../../components/organisms/TeamResultsCard";
 
 type TeamData = {
