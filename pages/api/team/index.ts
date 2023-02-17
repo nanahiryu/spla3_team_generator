@@ -110,7 +110,7 @@ const createTeamApi = async (
     });
 
     // DBにteam_logを保存する処理
-    await setTeamLog(bravoMembers, alphaMembers);
+    await setTeamLog(bravoMembers, alphaMembers, groupId);
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });

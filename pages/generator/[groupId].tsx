@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useAuthUser } from "../../Atoms";
 import { RankCard } from "../../components/organisms/RankCard";
 import { useLoadings } from "../../Hooks/useLoadings";
-import { RankStateType } from "../../types/RankCard";
+import { Member, RankStateType } from "../../types/RankCard";
 import { ReqTeamGrouping } from "../../types/request/Team";
 import { supabase } from "../../utils/supabase";
 import { useAtom } from "jotai";
@@ -14,8 +14,8 @@ import { Player } from "../../types/RankCard";
 import { TeamResultsCard } from "../../components/organisms/TeamResultsCard";
 
 type TeamData = {
-  alpha: Player[];
-  bravo: Player[];
+  alpha: Member[];
+  bravo: Member[];
 };
 
 export default function Generator() {
@@ -61,6 +61,7 @@ export default function Generator() {
     console.log("rankStateList:");
     console.log(rankStateList);
   }, []);
+
   const createNewMember = (rankId: string) => {
     let newUserList = [
       ...rankStateList.find((rankState) => {
@@ -142,9 +143,35 @@ export default function Generator() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        stopLoading();
       });
+  };
+
+  const reroleMembers = (groupId: string | string[] | undefined) => {
+    // get requestでgroupIdをqueryで渡す
+    if (typeof groupId !== "string") {
+      console.log("error: groupId is not string");
+      return;
+    }
+    startLoading();
     console.log(loading);
-    stopLoading();
+    axios
+      .get("/api/team/rerole/", {
+        params: {
+          groupId: groupId,
+        },
+      })
+      .then((res) => {
+        setRespTeamData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        stopLoading();
+      });
   };
 
   // useEffect(() => {
@@ -205,7 +232,12 @@ export default function Generator() {
                   teamName="bravo"
                   teamMembers={respTeamData.bravo}
                 />
-                <Button bgColor="teal.400">もう一度振り分ける</Button>
+                <Button
+                  bgColor="teal.400"
+                  onClick={() => reroleMembers(groupId)}
+                >
+                  もう一度振り分ける
+                </Button>
               </Flex>
             )}
           </>

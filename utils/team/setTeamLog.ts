@@ -1,12 +1,16 @@
 import { Member, MemberLog } from "../../types/RankCard";
 import { supabase } from "../supabase";
 
-export const setTeamLog = (bravoMembers: Member[], alphaMembers: Member[]) => {
+export const setTeamLog = (
+  bravoMembers: Member[],
+  alphaMembers: Member[],
+  groupId: string
+) => {
   // team_log_set
   return new Promise(async (resolve, reject) => {
     const { data: data4, error: error4 } = await supabase
       .from("team_log_set")
-      .insert({})
+      .insert({ group_id: groupId })
       .select();
     if (error4) {
       reject(error4);
