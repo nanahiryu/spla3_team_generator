@@ -74,37 +74,40 @@ export interface Database {
           uuid?: string
         }
       }
-      team_log: {
+      team_log_set: {
         Row: {
           created_at: string
-          member_id: string
-          team_id: string
+          group_id: string
           uuid: string
         }
         Insert: {
-          created_at: string
-          member_id: string
-          team_id: string
+          created_at?: string
+          group_id: string
           uuid?: string
         }
         Update: {
           created_at?: string
-          member_id?: string
-          team_id?: string
+          group_id?: string
           uuid?: string
         }
       }
-      teams: {
+      team_member_log: {
         Row: {
-          name: string
+          member_id: string
+          team_id: number
+          team_set_id: string
           uuid: string
         }
         Insert: {
-          name: string
+          member_id: string
+          team_id: number
+          team_set_id: string
           uuid?: string
         }
         Update: {
-          name?: string
+          member_id?: string
+          team_id?: number
+          team_set_id?: string
           uuid?: string
         }
       }
@@ -124,7 +127,15 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      group_members_with_ranks: {
+        Row: {
+          rank_id: string | null
+          rank_name: string | null
+          user_id: string | null
+          user_name: string | null
+          uuid: string | null
+        }
+      }
     }
     Functions: {
       [_ in never]: never

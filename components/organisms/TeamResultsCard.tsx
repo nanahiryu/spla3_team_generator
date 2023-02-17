@@ -1,10 +1,10 @@
 import React from "react";
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import { Player } from "../../types/RankCard";
+import { Member, Player } from "../../types/RankCard";
 
 type TeamResultsCardProps = {
   teamName: string;
-  teamMembers: Player[];
+  teamMembers: Member[];
 };
 
 export const TeamResultsCard = ({

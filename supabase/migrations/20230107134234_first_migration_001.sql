@@ -35,6 +35,7 @@ CREATE TABLE "team_member_log" (
 
 CREATE TABLE "team_log_set" (
   "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
+  "group_id" uuid NOT NULL,
   "created_at" TIMESTAMP NOT NULL DEFAULT now()
 );
 
@@ -49,3 +50,17 @@ ALTER TABLE "member_rank" ADD FOREIGN KEY ("member_id") REFERENCES "group_member
 ALTER TABLE "team_member_log" ADD FOREIGN KEY ("member_id") REFERENCES "group_members" ("uuid");
 
 ALTER TABLE "team_member_log" ADD FOREIGN KEY ("team_set_id") REFERENCES "team_log_set" ("uuid");
+
+ALTER TABLE "team_log_set" ADD FOREIGN KEY ("group_id") REFERENCES "groups" ("uuid");
+
+CREATE VIEW "group_members_with_ranks" AS
+SELECT
+  gm.uuid AS "uuid",
+  u.uuid AS "user_id",
+  u.name AS "user_name",
+  r.uuid AS "rank_id",
+  r.name AS "rank_name"
+FROM "group_members" gm
+INNER JOIN "users" u ON u.uuid = gm.user_id
+INNER JOIN "member_rank" mr ON mr.member_id = gm.uuid
+INNER JOIN "ranks" r ON r.uuid = mr.rank_id;

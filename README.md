@@ -32,3 +32,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## データベース変更にあたって
+
+1. [dbdiagram](https://dbdiagram.io/d/63aae37c7d39e42284e7b7e4)の変更&sql の export
+2. migration ファイルにペースト or 新しい migration ファイルの生成
+   ```
+   supabase db commit add_profiles
+   ```
+3. supabase 仕様に default の書き換えなどを行う
+4. DB の型定義ファイルの生成
+
+```bash
+supabase gen types typescript --local > types/schema.ts
+```
