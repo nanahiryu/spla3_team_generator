@@ -31,7 +31,6 @@ const reroleTeamApi = async (
     if (error1) {
       throw error1;
     }
-    console.log("data1: ", data1);
     let teamSetUUIDs: string[] = [];
     data1.forEach((teamSet) => {
       teamSetUUIDs.push(teamSet.uuid);
@@ -40,25 +39,39 @@ const reroleTeamApi = async (
       .from("team_member_log")
       .select()
       .in("team_set_id", teamSetUUIDs);
+    console.log("data2: ", data2);
     if (error2) {
       throw error2;
     }
-    console.log("data2: ", data2);
     // 被りポイントの計算
     const KPcounter: { [uuid: string]: { [uuid: string]: number } } = {};
     teamSetUUIDs.forEach((teamSetUUID) => {
+      console.log("teamSetUUID: ", teamSetUUID);
       const tempBravoMemberLog = data2
         .filter((memberLog) => {
-          teamSetUUID === memberLog.team_set_id && memberLog.team_id === 0;
+          console.log(
+            "team_set_id flag: ",
+            memberLog.team_set_id === teamSetUUID
+          );
+          console.log("team_id flag: ", memberLog.team_id === 0);
+          console.log(
+            "flag: ",
+            memberLog.team_set_id === teamSetUUID && memberLog.team_id === 0
+          );
+          return (
+            teamSetUUID === memberLog.team_set_id && memberLog.team_id === 0
+          );
         })
         .map((memberLog) => memberLog.member_id);
+      console.log("tempBravoMemberLog: ", tempBravoMemberLog);
       tempBravoMemberLog.forEach((memberId) => {
         tempBravoMemberLog.forEach((memberId2) => {
           if (memberId !== memberId2) {
-            if (KPcounter[memberId] === undefined) {
+            console.log(memberId, ": ", KPcounter.hasOwnProperty(memberId));
+            if (!KPcounter.hasOwnProperty(memberId)) {
               KPcounter[memberId] = {};
             }
-            if (KPcounter[memberId][memberId2] === undefined) {
+            if (!KPcounter[memberId].hasOwnProperty(memberId2)) {
               KPcounter[memberId][memberId2] = 1;
             }
             KPcounter[memberId][memberId2]++;
@@ -70,13 +83,15 @@ const reroleTeamApi = async (
           teamSetUUID === memberLog.team_set_id && memberLog.team_id === 1;
         })
         .map((memberLog) => memberLog.member_id);
+      console.log("tempAlphaMemberLog: ", tempAlphaMemberLog);
       tempAlphaMemberLog.forEach((memberId) => {
         tempAlphaMemberLog.forEach((memberId2) => {
           if (memberId !== memberId2) {
-            if (KPcounter[memberId] === undefined) {
+            console.log(memberId, ": ", KPcounter.hasOwnProperty(memberId));
+            if (!KPcounter.hasOwnProperty(memberId)) {
               KPcounter[memberId] = {};
             }
-            if (KPcounter[memberId][memberId2] === undefined) {
+            if (!KPcounter[memberId].hasOwnProperty(memberId2)) {
               KPcounter[memberId][memberId2] = 1;
             }
             KPcounter[memberId][memberId2]++;
@@ -84,15 +99,14 @@ const reroleTeamApi = async (
         });
       });
     });
+    console.log("KPcounter: ", KPcounter);
     const { data: data3, error: error3 } = await supabase
       .from("team_member_log")
       .select("member_id")
       .eq("team_set_id", teamSetUUIDs[0]);
     if (error3) {
-      console.log("error3: ", error3);
       throw error3;
     }
-    console.log("data3: ", data3);
     // 直近のメンバーを取得
     let latestMembers: rankAndPlayer[] = [];
     const { data: data4, error: error4 } = await supabase
@@ -192,7 +206,7 @@ const reroleTeamApi = async (
               playerName: maxMember.Player.playerName,
               memberId: maxMember.memberId,
             });
-            console.log("player name: ", maxMember.Player.playerName);
+            // alphaMembersに入ったのでtempMembersから削除
             tempMembers = tempMembers.filter(
               (member) => member.memberId !== maxMember!.memberId
             );
