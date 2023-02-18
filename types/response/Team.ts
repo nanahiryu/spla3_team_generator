@@ -1,6 +1,10 @@
-import { Player } from "../RankCard";
+import { Member, Player } from "../RankCard";
 
 export type RespTeamGrouping = {
-  bravo: Player[];
-  alpha: Player[];
+  bravo: Member[];
+  alpha: Member[];
+};
+
+export type RespErrorString = {
+  error: string;
 };

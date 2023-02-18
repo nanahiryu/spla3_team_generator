@@ -1,21 +1,20 @@
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuthUser } from "../../Atoms";
 import { RankCard } from "../../components/organisms/RankCard";
 import { useLoadings } from "../../Hooks/useLoadings";
-import { RankStateType } from "../../types/RankCard";
+import { Member, RankStateType } from "../../types/RankCard";
 import { ReqTeamGrouping } from "../../types/request/Team";
 import { supabase } from "../../utils/supabase";
 import { useAtom } from "jotai";
 import { LoadSpinner } from "../../components/atoms/loadSpinner";
-import { Player } from "../../types/RankCard";
 import { TeamResultsCard } from "../../components/organisms/TeamResultsCard";
 
 type TeamData = {
-  alpha: Player[];
-  bravo: Player[];
+  alpha: Member[];
+  bravo: Member[];
 };
 
 export default function Generator() {
@@ -61,13 +60,17 @@ export default function Generator() {
     console.log("rankStateList:");
     console.log(rankStateList);
   }, []);
+
   const createNewMember = (rankId: string) => {
-    let newUserList = [
-      ...rankStateList.find((rankState) => {
-        rankState.uuid === rankId;
-      })!.userList,
-    ];
+    let newUserList: string[] = [];
+    const selectedRankState = rankStateList.find((rankState) => {
+      return rankState.uuid === rankId;
+    });
+    if (selectedRankState) {
+      newUserList = [...selectedRankState.userList];
+    }
     newUserList.push("");
+    console.log("newUserList", newUserList);
     setRankStateList(
       rankStateList.map((rankState) =>
         rankState.uuid === rankId
@@ -76,12 +79,15 @@ export default function Generator() {
       )
     );
   };
+
   const deleteMember = (rankId: string, orderInRank: number) => {
-    let newUserList = [
-      ...rankStateList.find((rankState) => {
-        rankState.uuid === rankId;
-      })!.userList,
-    ];
+    let newUserList: string[] = [];
+    const selectedRankState = rankStateList.find((rankState) => {
+      return rankState.uuid === rankId;
+    });
+    if (selectedRankState) {
+      newUserList = [...selectedRankState.userList];
+    }
     newUserList.splice(orderInRank, 1);
     setRankStateList(
       rankStateList.map((rankState) =>
@@ -111,7 +117,14 @@ export default function Generator() {
     );
   };
   const postTeamMembers = () => {
-    let reqTeamGrouping: ReqTeamGrouping = { RankMembers: [] };
+    if (typeof groupId !== "string") {
+      console.log("error: groupId is not string");
+      return;
+    }
+    let reqTeamGrouping: ReqTeamGrouping = {
+      RankMembers: [],
+      groupId: groupId,
+    };
     rankStateList.forEach((rankState) => {
       let RankMembers: string[] = [];
       rankState.userList.forEach((user) => {
@@ -135,9 +148,35 @@ export default function Generator() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        stopLoading();
       });
+  };
+
+  const reroleMembers = (groupId: string | string[] | undefined) => {
+    // get requestでgroupIdをqueryで渡す
+    if (typeof groupId !== "string") {
+      console.log("error: groupId is not string");
+      return;
+    }
+    startLoading();
     console.log(loading);
-    stopLoading();
+    axios
+      .get("/api/team/rerole/", {
+        params: {
+          groupId: groupId,
+        },
+      })
+      .then((res) => {
+        setRespTeamData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        stopLoading();
+      });
   };
 
   // useEffect(() => {
@@ -198,7 +237,12 @@ export default function Generator() {
                   teamName="bravo"
                   teamMembers={respTeamData.bravo}
                 />
-                <Button bgColor="teal.400">もう一度振り分ける</Button>
+                <Button
+                  bgColor="teal.400"
+                  onClick={() => reroleMembers(groupId)}
+                >
+                  もう一度振り分ける
+                </Button>
               </Flex>
             )}
           </>
