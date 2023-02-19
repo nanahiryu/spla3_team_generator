@@ -188,7 +188,7 @@ export default function Generator() {
 
   return (
     <>
-      <Flex alignItems="center" justifyContent="center" w="100%" gap="4" py="4">
+      <Flex alignItems="start" justifyContent="center" w="100%" gap="4" py="4">
         {loading ? (
           <LoadSpinner />
         ) : (
