@@ -188,7 +188,7 @@ export default function Generator() {
 
   return (
     <>
-      <Flex alignItems="center" w="100%" gap="4" py="4">
+      <Flex alignItems="center" justifyContent="center" w="100%" gap="4" py="4">
         {loading ? (
           <LoadSpinner />
         ) : (
@@ -201,6 +201,13 @@ export default function Generator() {
               py="4"
             >
               <Heading>チーム作成</Heading>
+              <Button
+                color="white"
+                bgColor="teal.400"
+                onClick={() => postTeamMembers()}
+              >
+                このメンバーでチームを作成
+              </Button>
               {rankStateList.length !== 0 &&
                 rankStateList.map((rankState) => (
                   <RankCard
@@ -215,9 +222,6 @@ export default function Generator() {
                     onChangeUserName={onChangeUserName}
                   ></RankCard>
                 ))}
-              <Button bgColor="teal.400" onClick={() => postTeamMembers()}>
-                チームを作成する
-              </Button>
             </Flex>
             {respTeamData && (
               <Flex
@@ -229,6 +233,13 @@ export default function Generator() {
                 py="4"
               >
                 <Heading>チーム分け結果</Heading>
+                <Button
+                  color="white"
+                  bgColor="teal.400"
+                  onClick={() => reroleMembers(groupId)}
+                >
+                  もう一度振り分ける
+                </Button>
                 <TeamResultsCard
                   teamName="alpha"
                   teamMembers={respTeamData.alpha}
@@ -237,12 +248,6 @@ export default function Generator() {
                   teamName="bravo"
                   teamMembers={respTeamData.bravo}
                 />
-                <Button
-                  bgColor="teal.400"
-                  onClick={() => reroleMembers(groupId)}
-                >
-                  もう一度振り分ける
-                </Button>
               </Flex>
             )}
           </>

@@ -53,7 +53,7 @@ export const RankCard = ({
     >
       <Box alignItems="center" justifyContent="center" mr="8">
         <Flex alignItems="center" justifyContent="center">
-          <Text color="white" fontSize="3xl" fontWeight="bold">
+          <Text color="gray.700" fontSize="3xl" fontWeight="bold">
             Rank {rank}
           </Text>
         </Flex>
@@ -77,6 +77,9 @@ export const RankCard = ({
             />
             <Button
               color="white"
+              variant="outline"
+              border="2px"
+              borderColor="white"
               bgColor="red"
               h="100%"
               onClick={() => deleteMember(id, i)}
