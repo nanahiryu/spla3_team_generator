@@ -1,4 +1,4 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -24,43 +24,33 @@ export default function Generator() {
   const [respTeamData, setRespTeamData] = useState<TeamData>();
   const router = useRouter();
   const { groupId } = router.query;
+  const toast = useToast();
   // rankStateListの初期化
   useEffect(() => {
     (async () => {
-      console.log("async");
       try {
         startLoading();
         const { data } = await supabase.from("ranks").select();
-        console.log(data);
         let newRankStateList: RankStateType[] = [];
         data?.forEach((rank) => {
-          if (rank.name === "X" || rank.name === "S") {
-            newRankStateList.push({
-              uuid: rank.uuid,
-              rankName: rank.name,
-              rankColor: rank.rank_color,
-              userList: ["", ""],
-            });
-          } else {
-            newRankStateList.push({
-              uuid: rank.uuid,
-              rankName: rank.name,
-              rankColor: rank.rank_color,
-              userList: [],
-            });
-          }
+          newRankStateList.push({
+            uuid: rank.uuid,
+            rankName: rank.name,
+            rankColor: rank.rank_color,
+            userList: ["", ""],
+          });
         });
         setRankStateList(newRankStateList);
+        console.log("newRankStateList", newRankStateList);
       } catch (error) {
         console.log(error);
       } finally {
         stopLoading();
       }
     })();
-    console.log("rankStateList:");
-    console.log(rankStateList);
   }, []);
 
+  // Inputの追加
   const createNewMember = (rankId: string) => {
     let newUserList: string[] = [];
     const selectedRankState = rankStateList.find((rankState) => {
@@ -80,6 +70,7 @@ export default function Generator() {
     );
   };
 
+  // Inputの削除
   const deleteMember = (rankId: string, orderInRank: number) => {
     let newUserList: string[] = [];
     const selectedRankState = rankStateList.find((rankState) => {
@@ -97,6 +88,8 @@ export default function Generator() {
       )
     );
   };
+
+  // ユーザー名の変更
   const onChangeUserName = (
     rankId: string,
     orderInRank: number,
@@ -116,9 +109,24 @@ export default function Generator() {
       )
     );
   };
+
   const postTeamMembers = () => {
     if (typeof groupId !== "string") {
       console.log("error: groupId is not string");
+      return;
+    }
+    if (
+      rankStateList
+        .find((rankState) => rankState.rankName === "X")
+        ?.userList.every((user) => user === "")
+    ) {
+      toast({
+        title: "Xランクのメンバーを一人以上入力してください",
+        status: "error",
+        position: "top",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
     let reqTeamGrouping: ReqTeamGrouping = {
@@ -161,7 +169,6 @@ export default function Generator() {
       return;
     }
     startLoading();
-    console.log(loading);
     axios
       .get("/api/team/rerole/", {
         params: {

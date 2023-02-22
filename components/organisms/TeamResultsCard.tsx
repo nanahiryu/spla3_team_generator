@@ -29,7 +29,9 @@ export const TeamResultsCard = ({
         {teamMembers.map((user) => (
           <Flex h={12} key={`user-${user.playerId}`} alignItems="center">
             <Box bg="white" borderRadius="lg" w="100%" py="2" px="4">
-              <Text fontSize="2xl">{user.playerName}</Text>
+              <Text fontSize="2xl" fontWeight="semibold">
+                {user.playerName}
+              </Text>
             </Box>
           </Flex>
         ))}
