@@ -50,10 +50,11 @@ export const RankCard = ({
       bg={rankColor}
       borderRadius="lg"
       shadow="md"
+      filter="saturate(80%)"
     >
       <Box alignItems="center" justifyContent="center" mr="8">
         <Flex alignItems="center" justifyContent="center">
-          <Text color="white" fontSize="3xl" fontWeight="bold">
+          <Text color="gray.700" fontSize="3xl" fontWeight="bold">
             Rank {rank}
           </Text>
         </Flex>
@@ -69,14 +70,22 @@ export const RankCard = ({
             <Input
               size="lg"
               fontSize="2xl"
+              fontWeight="semibold"
               bgColor="white"
               mr={2}
-              placeholder="メンバー名を入力"
+              placeholder={
+                rank === "X" && i === 0
+                  ? "メンバー名を入力(必須)"
+                  : "メンバー名を入力"
+              }
               value={user}
               onChange={(e) => onChangeUserName(id, i, e)}
             />
             <Button
               color="white"
+              variant="outline"
+              border="2px"
+              borderColor="white"
               bgColor="red"
               h="100%"
               onClick={() => deleteMember(id, i)}
