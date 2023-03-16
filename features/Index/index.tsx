@@ -1,10 +1,60 @@
-import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  List,
+  ListItem,
+  OrderedList,
+  Text,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuthUser } from "../../Atoms";
 import { useLoadings } from "../../Hooks/useLoadings";
 import { LoadSpinner } from "../../components/atoms/loadSpinner";
 import { useCreateGroup } from "../../Hooks/useCreateGroup";
+import Image from "next/image";
+
+type DescriptionCardProps = {
+  title: string;
+  description: string;
+  fig_path: string;
+};
+
+const DescriptionCard = (props: DescriptionCardProps) => {
+  const { title, description, fig_path } = props;
+  return (
+    <Flex
+      direction="column"
+      bg="white"
+      py="2"
+      px="6"
+      w="30%"
+      justify="start"
+      align="center"
+      borderRadius="xl"
+    >
+      <Text fontSize="2xl" fontWeight="semibold" my="4">
+        {title}
+      </Text>
+      <Box borderRadius="xl" overflow="hidden" h="220px">
+        <Image
+          src={fig_path}
+          alt=""
+          width={400}
+          height={200}
+          style={{ objectFit: "cover" }}
+        />
+      </Box>
+      <Box m="4">
+        <Text fontSize="lg" fontWeight="medium">
+          {description}
+        </Text>
+      </Box>
+    </Flex>
+  );
+};
 
 const Home = () => {
   // const [userAuth, setUserAuth] = useAuthUser();
@@ -46,17 +96,62 @@ const Home = () => {
 
   return (
     <>
-      <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="4">
+      <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="2">
         {loading ? (
           <LoadSpinner />
         ) : (
           <>
-            <Box>
-              <Text fontSize="6xl">Home</Text>
+            <Box fontSize="4xl" fontWeight="semibold">
+              spla team generator とは
             </Box>
+            <Box
+              fontSize="xl"
+              fontWeight="medium"
+              bg="white"
+              borderRadius="xl"
+              w="70%"
+              p="4"
+            >
+              <Text>
+                spla team generator
+                は、スプラトゥーン3のプライベートマッチのマッチングをサポートするツールです。
+              </Text>
+              <Text>このツールを使うと</Text>
+              <OrderedList ml="10">
+                <ListItem fontWeight="bold">
+                  なんかあっちのチーム強すぎない...？
+                </ListItem>
+                <ListItem fontWeight="bold">
+                  ずっと同じメンバーで戦わされてる...
+                </ListItem>
+              </OrderedList>
+              <Text>が解消できるようになります。</Text>
+            </Box>
+            <Box>
+              <Text fontSize="4xl" fontWeight="semibold">
+                spla team generator でできること
+              </Text>
+            </Box>
+            <Flex gap="4" w="90%" justify="center">
+              <DescriptionCard
+                title="1. チーム名を入力"
+                description="以下のボックスにグループ名を入力し、グループを作成しましょう。"
+                fig_path="/img/splatoon_train_bg.jpg"
+              />
+              <DescriptionCard
+                title="2. チームメンバーをランクごとに登録"
+                description="チームメンバーをウデマエごとに登録しましょう。(ゲーム内のウデマエと一致させる必要はありません。)"
+                fig_path="/img/udemae_bg.jpeg"
+              />
+              <DescriptionCard
+                title="3. 何度でもチームを生成"
+                description="チームメンバーを登録したら、何度でもチームを生成することができます。二回目以降は、登録したチームメンバーがなるべく被らないようにチームが組まれます。"
+                fig_path="/img/private_match_bg.jpg"
+              />
+            </Flex>
             <Flex flexDirection="column" gap="4" w="80">
               <Input
-                placeholder="作成するチームの名前を入力"
+                placeholder="グループの名前を入力"
                 value={groupName}
                 onChange={(e) => onChangeGroupName(e)}
                 bgColor="white"
@@ -67,7 +162,7 @@ const Home = () => {
                 size="lg"
                 onClick={onClickCreateNewGroup}
               >
-                generatorへ
+                グループを作成する
               </Button>
             </Flex>
           </>
