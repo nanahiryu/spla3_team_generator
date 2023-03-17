@@ -7,7 +7,7 @@ export const Header = () => {
     <>
       <Box m="8">
         <Link href="/">
-          <Heading>spla team generator</Heading>
+          <Heading lineHeight="44px">spla team generator</Heading>
         </Link>
       </Box>
     </>

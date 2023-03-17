@@ -64,12 +64,12 @@ export const RankCard = ({
           </Button>
         </Flex>
       </Box>
-      <Stack spacing={6} my={2} w="90%">
+      <Stack spacing={4} my={1} w="90%">
         {rankState.userList.map((user, i) => (
-          <Flex h={12} key={`${id}-${i}`} alignItems="center">
+          <Flex h={10} key={`${id}-${i}`} alignItems="center">
             <Input
-              size="lg"
-              fontSize="2xl"
+              size="md"
+              fontSize="xl"
               fontWeight="semibold"
               bgColor="white"
               mr={2}

@@ -13,10 +13,12 @@ type GroupMemberInputBoxProps = {
   startLoading: () => void;
   stopLoading: () => void;
   setRespTeamData: (teamData: TeamData) => void;
+  setMode: (mode: "input" | "result") => void;
 };
 
 const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
-  const { groupId, startLoading, stopLoading, setRespTeamData } = props;
+  const { groupId, startLoading, stopLoading, setRespTeamData, setMode } =
+    props;
   const toast = useToast();
   const [rankStateList, setRankStateList] = useState<RankStateType[]>([]);
 
@@ -142,6 +144,7 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
       })
       .finally(() => {
         stopLoading();
+        setMode("result");
       });
   };
   return (
