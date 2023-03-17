@@ -72,6 +72,10 @@ const Home = () => {
 
   const onClickCreateNewGroup = async () => {
     try {
+      // groupNameが空またはスペースのみの場合はthrow
+      if (!groupName || !groupName.trim()) {
+        throw new Error("groupName is empty");
+      }
       const { data, error } = await createGroup(groupName);
       if (error) {
         throw error;
@@ -83,7 +87,7 @@ const Home = () => {
       // uuidを使って動的ルーティング
       router.push({
         pathname: `/generator/${data[0].uuid}`,
-        query: { groupId: data[0].uuid },
+        query: { groupId: data[0].uuid, groupName: data[0].name },
       });
     } catch (error) {
       console.log(error);
