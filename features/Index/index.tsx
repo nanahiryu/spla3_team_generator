@@ -48,7 +48,7 @@ const DescriptionCard = (props: DescriptionCardProps) => {
         />
       </Box>
       <Box m="4">
-        <Text fontSize="lg" fontWeight="medium">
+        <Text fontSize="lg" fontWeight="bold">
           {description}
         </Text>
       </Box>
@@ -101,6 +101,23 @@ const Home = () => {
           <LoadSpinner />
         ) : (
           <>
+            <Flex flexDirection="column" gap="4" w="80">
+              <Input
+                placeholder="グループの名前を入力"
+                value={groupName}
+                onChange={(e) => onChangeGroupName(e)}
+                bgColor="white"
+                size="lg"
+              />
+              <Button
+                bgColor="teal.400"
+                color="white"
+                size="lg"
+                onClick={onClickCreateNewGroup}
+              >
+                グループを作成する
+              </Button>
+            </Flex>
             <Box fontSize="4xl" fontWeight="semibold">
               spla team generator とは
             </Box>
@@ -112,20 +129,24 @@ const Home = () => {
               w="70%"
               p="4"
             >
-              <Text>
+              <Text fontWeight="semibold" color="gray.600">
                 spla team generator
                 は、スプラトゥーン3のプライベートマッチのマッチングをサポートするツールです。
               </Text>
-              <Text>このツールを使うと</Text>
+              <Text fontWeight="semibold" color="gray.600">
+                このツールを使うと
+              </Text>
               <OrderedList ml="10">
-                <ListItem fontWeight="bold">
+                <ListItem fontWeight="bold" fontSize="xl">
                   なんかあっちのチーム強すぎない...？
                 </ListItem>
-                <ListItem fontWeight="bold">
+                <ListItem fontWeight="bold" fontSize="xl">
                   ずっと同じメンバーで戦わされてる...
                 </ListItem>
               </OrderedList>
-              <Text>が解消できるようになります。</Text>
+              <Text fontWeight="semibold" color="gray.600">
+                が解消できるようになります。
+              </Text>
             </Box>
             <Box>
               <Text fontSize="4xl" fontWeight="semibold">
@@ -148,22 +169,6 @@ const Home = () => {
                 description="チームメンバーを登録したら、何度でもチームを生成することができます。二回目以降は、登録したチームメンバーがなるべく被らないようにチームが組まれます。"
                 fig_path="/img/private_match_bg.jpg"
               />
-            </Flex>
-            <Flex flexDirection="column" gap="4" w="80">
-              <Input
-                placeholder="グループの名前を入力"
-                value={groupName}
-                onChange={(e) => onChangeGroupName(e)}
-                bgColor="white"
-                size="lg"
-              />
-              <Button
-                bgColor="teal.400"
-                size="lg"
-                onClick={onClickCreateNewGroup}
-              >
-                グループを作成する
-              </Button>
             </Flex>
           </>
         )}
