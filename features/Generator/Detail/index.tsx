@@ -16,12 +16,12 @@ export type TeamData = {
 };
 
 const GroupDetailPage = () => {
-  const { loading, startLoading, stopLoading } = useLoadings();
   // const [userAuth, setUserAuth] = useAuthUser();
   const [respTeamData, setRespTeamData] = useState<TeamData>();
   const [mode, setMode] = useState<"input" | "result">("input");
   const router = useRouter();
-  const { groupId, groupName } = router.query;
+  const groupId = router.asPath.split("/")[2];
+  const { groupName } = router.query;
 
   // useEffect(() => {
   //   if (!userAuth) {
