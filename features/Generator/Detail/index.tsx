@@ -9,6 +9,8 @@ import { LoadSpinner } from "../../../components/atoms/loadSpinner";
 import ResultBox from "./resultBox";
 import GroupMemberInputBox from "./groupMemberInputBox";
 import SideBar from "./SideBar";
+import { supabase } from "../../../utils/supabase";
+import { useGroupName } from "../../../Hooks/useGroupName";
 
 export type TeamData = {
   alpha: Member[];
@@ -19,9 +21,11 @@ const GroupDetailPage = () => {
   // const [userAuth, setUserAuth] = useAuthUser();
   const [respTeamData, setRespTeamData] = useState<TeamData>();
   const [mode, setMode] = useState<"input" | "result">("input");
+  const [groupId, setGroupId] = useState<string | undefined>();
+  const [groupName, setGroupName] = useState<string | undefined>();
   const router = useRouter();
-  const groupId = router.asPath.split("/")[2];
-  const { groupName } = router.query;
+  const toast = useToast();
+  const { fetchGroupName } = useGroupName(groupId as string, setGroupName);
 
   // useEffect(() => {
   //   if (!userAuth) {
@@ -29,6 +33,24 @@ const GroupDetailPage = () => {
   //   }
   //   console.log(userAuth);
   // });
+
+  useEffect(() => {
+    setGroupId(location.pathname.split("/")[2]);
+  }, []);
+
+  useEffect(() => {
+    try {
+      fetchGroupName();
+    } catch (error) {
+      toast({
+        title: "グループ名の取得に失敗しました",
+        status: "error",
+        duration: 3000,
+        position: "top",
+        isClosable: true,
+      });
+    }
+  }, [groupId]);
 
   return (
     <>
@@ -67,11 +89,6 @@ type MainContentsProps = {
 const MainContents = (props: MainContentsProps) => {
   const { groupId, respTeamData, setRespTeamData, mode, setMode } = props;
   const { loading, startLoading, stopLoading } = useLoadings();
-
-  useEffect(() => {
-    console.log(mode);
-    console.log(respTeamData);
-  }, [mode]);
 
   const ContentSwitch = () => {
     switch (mode) {

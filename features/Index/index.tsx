@@ -87,7 +87,6 @@ const Home = () => {
       // uuidを使って動的ルーティング
       router.push({
         pathname: `/generator/${data[0].uuid}`,
-        query: { groupId: data[0].uuid, groupName: data[0].name },
       });
     } catch (error) {
       console.log(error);

@@ -15,7 +15,7 @@ const SideBar = (props: SideBarProps) => {
   const toast = useToast();
 
   const onClickCopyUrl = () => {
-    const currentUrl = `${window.location.protocol}/${window.location.host}${router.asPath}`;
+    const currentUrl = `${location.protocol}//${location.host}${location.pathname}`;
     navigator.clipboard.writeText(currentUrl);
     toast({
       title: "URLをコピーしました",
@@ -92,7 +92,6 @@ const SelectTabGroup = (props: SelectTabGroupProps) => {
     } else {
       console.log("error: mode is not input or result");
     }
-    console.log(mode);
   }, [mode]);
 
   const onClickToggle = (tabMode: string) => {

@@ -34,7 +34,6 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
     try {
       startLoading();
       fetchRankStateList();
-      console.log("groupId", groupId);
       fetchPreviousGroupMembers();
     } catch (error) {
       console.log(error);
