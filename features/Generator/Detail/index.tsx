@@ -155,7 +155,17 @@ const MainContents = (props: MainContentsProps) => {
   };
 
   return (
-    <Flex alignItems="start" justifyContent="center" w="100%" gap="4" py="4">
+    <Flex
+      h="calc(100vh - 108px)"
+      alignItems="start"
+      justifyContent="center"
+      w="100%"
+      gap="4"
+      py="4"
+      overflow="auto"
+      borderTop="2px"
+      borderTopColor="gray.200"
+    >
       {loading ? (
         <LoadSpinner />
       ) : (
