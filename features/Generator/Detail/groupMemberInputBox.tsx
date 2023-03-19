@@ -164,7 +164,7 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
         このメンバーでチームを作成
       </Button>
       {rankStateList.length !== 0 &&
-        rankStateList.map((rankState, i) => (
+        rankStateList.map((rankState) => (
           <RankCard
             key={rankState.uuid}
             id={rankState.uuid}
