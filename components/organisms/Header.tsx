@@ -5,9 +5,9 @@ import Link from "next/link";
 export const Header = () => {
   return (
     <>
-      <Box m="8">
-        <Link href="/">
-          <Heading>spla team generator</Heading>
+      <Box m="8" w="400px">
+        <Link tabIndex={-1} href="/">
+          <Heading lineHeight="44px">spla team generator</Heading>
         </Link>
       </Box>
     </>

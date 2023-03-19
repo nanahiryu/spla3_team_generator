@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { TeamData } from ".";
 import { RankCard } from "../../../components/organisms/RankCard";
+import { usePreviousGroupMemberSet } from "../../../Hooks/usePreviousGroupMemberId";
 import { useRanks } from "../../../Hooks/useRanks";
 import { RankStateType } from "../../../types/RankCard";
 import { ReqTeamGrouping } from "../../../types/request/Team";
@@ -13,20 +14,27 @@ type GroupMemberInputBoxProps = {
   startLoading: () => void;
   stopLoading: () => void;
   setRespTeamData: (teamData: TeamData) => void;
+  setMode: (mode: "input" | "result") => void;
 };
 
 const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
-  const { groupId, startLoading, stopLoading, setRespTeamData } = props;
+  const { groupId, startLoading, stopLoading, setRespTeamData, setMode } =
+    props;
   const toast = useToast();
   const [rankStateList, setRankStateList] = useState<RankStateType[]>([]);
 
   const { fetchRankStateList } = useRanks(setRankStateList);
+  const { fetchPreviousGroupMembers } = usePreviousGroupMemberSet(
+    groupId as string,
+    setRankStateList
+  );
 
   // rankStateListの初期化
   useEffect(() => {
     try {
       startLoading();
       fetchRankStateList();
+      fetchPreviousGroupMembers();
     } catch (error) {
       console.log(error);
     } finally {
@@ -142,6 +150,7 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
       })
       .finally(() => {
         stopLoading();
+        setMode("result");
       });
   };
   return (
@@ -155,7 +164,7 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
         このメンバーでチームを作成
       </Button>
       {rankStateList.length !== 0 &&
-        rankStateList.map((rankState) => (
+        rankStateList.map((rankState, i) => (
           <RankCard
             key={rankState.uuid}
             id={rankState.uuid}

@@ -18,9 +18,7 @@ const reroleTeamApi = async (
   let alphaMembers: Member[] = [];
   let bravoMembers: Member[] = [];
   const groupId: string = req.query.groupId as string;
-  console.log("rerole api is called");
   try {
-    console.log("try now");
     // 過去のteam分けを取得
     const { data: data1, error: error1 } = await supabase
       .from("team_log_set")
@@ -39,31 +37,19 @@ const reroleTeamApi = async (
       .from("team_member_log")
       .select()
       .in("team_set_id", teamSetUUIDs);
-    console.log("data2: ", data2);
     if (error2) {
       throw error2;
     }
     // 被りポイントの計算
     const KPcounter: { [uuid: string]: { [uuid: string]: number } } = {};
     teamSetUUIDs.forEach((teamSetUUID) => {
-      console.log("teamSetUUID: ", teamSetUUID);
       const tempBravoMemberLog = data2
         .filter((memberLog) => {
-          console.log(
-            "team_set_id flag: ",
-            memberLog.team_set_id === teamSetUUID
-          );
-          console.log("team_id flag: ", memberLog.team_id === 0);
-          console.log(
-            "flag: ",
-            memberLog.team_set_id === teamSetUUID && memberLog.team_id === 0
-          );
           return (
             teamSetUUID === memberLog.team_set_id && memberLog.team_id === 0
           );
         })
         .map((memberLog) => memberLog.member_id);
-      console.log("tempBravoMemberLog: ", tempBravoMemberLog);
       tempBravoMemberLog.forEach((memberId) => {
         tempBravoMemberLog.forEach((memberId2) => {
           if (memberId !== memberId2) {
@@ -83,11 +69,9 @@ const reroleTeamApi = async (
           teamSetUUID === memberLog.team_set_id && memberLog.team_id === 1;
         })
         .map((memberLog) => memberLog.member_id);
-      console.log("tempAlphaMemberLog: ", tempAlphaMemberLog);
       tempAlphaMemberLog.forEach((memberId) => {
         tempAlphaMemberLog.forEach((memberId2) => {
           if (memberId !== memberId2) {
-            console.log(memberId, ": ", KPcounter.hasOwnProperty(memberId));
             if (!KPcounter.hasOwnProperty(memberId)) {
               KPcounter[memberId] = {};
             }
@@ -99,7 +83,6 @@ const reroleTeamApi = async (
         });
       });
     });
-    console.log("KPcounter: ", KPcounter);
     const { data: data3, error: error3 } = await supabase
       .from("team_member_log")
       .select("member_id")
@@ -117,10 +100,8 @@ const reroleTeamApi = async (
         data3.map((member) => member.member_id)
       );
     if (error4) {
-      console.log("error4: ", error4);
       throw error4;
     }
-    console.log("data4: ", data4);
     latestMembers = data4.map((member) => {
       if (
         member.uuid &&
@@ -156,7 +137,6 @@ const reroleTeamApi = async (
       memberId: firstMember.memberId,
     });
     // 被りポイントを均すようにteam分け
-    console.log("start get new team");
     const rankNameList = ["X", "S", "A", "B"];
     rankNameList.forEach((rankName) => {
       let tempMembers = latestMembers.filter(
@@ -164,7 +144,6 @@ const reroleTeamApi = async (
       );
       const loop_num = tempMembers.length;
       for (let i = 0; i < loop_num; i++) {
-        console.log("rank: ", rankName, i, tempMembers.length);
         let maxKP = -100;
         let maxMember: rankAndPlayer | undefined;
         let minKP = 100;
@@ -173,7 +152,6 @@ const reroleTeamApi = async (
           tempMembers.forEach((member) => {
             // KPが高ければalphaに入り安いイメージ
             let KP = 0;
-            console.log("member: ", member);
             alphaMembers.forEach((alphaMember) => {
               if (
                 Object.keys(KPcounter).includes(member.memberId) &&
@@ -210,7 +188,6 @@ const reroleTeamApi = async (
             tempMembers = tempMembers.filter(
               (member) => member.memberId !== maxMember!.memberId
             );
-            console.log("tempMembers: ", tempMembers);
           }
         } else {
           tempMembers.forEach((member) => {
@@ -248,23 +225,19 @@ const reroleTeamApi = async (
               playerName: minMember.Player.playerName,
               memberId: minMember.memberId,
             });
-            console.log("player name: ", minMember.Player.playerName);
             tempMembers = tempMembers.filter(
               (member) => member.memberId !== minMember!.memberId
             );
-            console.log("tempMembers: ", tempMembers);
           }
         }
       }
     });
-    console.log("end get new team");
 
     // team分けをDBに登録
     await setTeamLog(bravoMembers, alphaMembers, groupId);
     // team分けをレスポンス
   } catch (error) {
     if (error instanceof Error) {
-      console.log("error: ", error.message);
       res.status(500).json({ error: error.message });
       return;
     }

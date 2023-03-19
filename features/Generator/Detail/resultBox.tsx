@@ -40,14 +40,7 @@ const ResultBox = (props: ResultBoxProps) => {
   };
   return (
     <>
-      <Flex
-        alignItems="center"
-        w="100%"
-        flexDirection="column"
-        gap="4"
-        mb="16"
-        py="4"
-      >
+      <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="4">
         <Heading>チーム分け結果</Heading>
         <Button
           color="white"
