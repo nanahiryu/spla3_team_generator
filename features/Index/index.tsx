@@ -35,7 +35,7 @@ const DescriptionCard = (props: DescriptionCardProps) => {
       align="center"
       borderRadius="xl"
     >
-      <Text fontSize="2xl" fontWeight="semibold" my="4">
+      <Text fontSize="xl" fontWeight="semibold" my="4">
         {title}
       </Text>
       <Box borderRadius="xl" overflow="hidden" h="220px">
@@ -99,11 +99,14 @@ const Home = () => {
 
   return (
     <>
-      <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="2">
+      <Flex alignItems="center" w="100%" flexDirection="column" gap="4" py="8">
         {loading ? (
           <LoadSpinner />
         ) : (
           <>
+            <Box fontSize="3xl" fontWeight="semibold" mt="12">
+              グループ名を入力してspla team generatorを始める
+            </Box>
             <Flex flexDirection="column" gap="4" w="80">
               <Input
                 placeholder="グループの名前を入力"
@@ -121,7 +124,7 @@ const Home = () => {
                 グループを作成する
               </Button>
             </Flex>
-            <Box fontSize="4xl" fontWeight="semibold">
+            <Box fontSize="3xl" fontWeight="semibold" mt="24">
               spla team generator とは
             </Box>
             <Box
@@ -151,8 +154,8 @@ const Home = () => {
                 が解消できるようになります。
               </Text>
             </Box>
-            <Box>
-              <Text fontSize="4xl" fontWeight="semibold">
+            <Box mt="24">
+              <Text fontSize="3xl" fontWeight="semibold">
                 spla team generator でできること
               </Text>
             </Box>
