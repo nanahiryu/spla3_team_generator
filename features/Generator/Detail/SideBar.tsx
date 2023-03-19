@@ -1,5 +1,7 @@
-import { Flex, Stack, Text } from "@chakra-ui/react";
+import { Flex, Stack, Text, useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { MdContentCopy } from "react-icons/md";
 
 type SideBarProps = {
   groupName: string;
@@ -9,6 +11,22 @@ type SideBarProps = {
 
 const SideBar = (props: SideBarProps) => {
   const { groupName, mode, setMode } = props;
+  const router = useRouter();
+  const toast = useToast();
+
+  const onClickCopyUrl = () => {
+    const currentUrl = `${location.protocol}//${location.host}${location.pathname}`;
+    navigator.clipboard.writeText(currentUrl);
+    toast({
+      title: "URLをコピーしました",
+      description: currentUrl,
+      status: "success",
+      duration: 2000,
+      position: "top",
+      isClosable: true,
+    });
+  };
+
   return (
     <>
       <Flex
@@ -37,7 +55,11 @@ const SideBar = (props: SideBarProps) => {
               backdropBrightness="50%"
               py="8"
               w="90%"
+              gap="1"
+              _hover={{ cursor: "pointer" }}
+              onClick={onClickCopyUrl}
             >
+              <MdContentCopy color="white" />
               <Text fontSize="2xl" fontWeight="semibold" color="whiteAlpha.900">
                 {groupName}
               </Text>
@@ -70,7 +92,6 @@ const SelectTabGroup = (props: SelectTabGroupProps) => {
     } else {
       console.log("error: mode is not input or result");
     }
-    console.log(mode);
   }, [mode]);
 
   const onClickToggle = (tabMode: string) => {

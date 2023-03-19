@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { TeamData } from ".";
 import { RankCard } from "../../../components/organisms/RankCard";
+import { usePreviousGroupMemberSet } from "../../../Hooks/usePreviousGroupMemberId";
 import { useRanks } from "../../../Hooks/useRanks";
 import { RankStateType } from "../../../types/RankCard";
 import { ReqTeamGrouping } from "../../../types/request/Team";
@@ -23,12 +24,17 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
   const [rankStateList, setRankStateList] = useState<RankStateType[]>([]);
 
   const { fetchRankStateList } = useRanks(setRankStateList);
+  const { fetchPreviousGroupMembers } = usePreviousGroupMemberSet(
+    groupId as string,
+    setRankStateList
+  );
 
   // rankStateListの初期化
   useEffect(() => {
     try {
       startLoading();
       fetchRankStateList();
+      fetchPreviousGroupMembers();
     } catch (error) {
       console.log(error);
     } finally {
