@@ -59,7 +59,7 @@ export const RankCard = ({
           </Text>
         </Flex>
         <Flex maxW="100%" alignItems="center" justifyContent="center">
-          <Button bgColor="white" onClick={onCreateNewMember}>
+          <Button tabIndex={-1} bgColor="white" onClick={onCreateNewMember}>
             メンバーを追加
           </Button>
         </Flex>
@@ -68,6 +68,7 @@ export const RankCard = ({
         {rankState.userList.map((user, i) => (
           <Flex h={10} key={`${id}-${i}`} alignItems="center">
             <Input
+              tabIndex={1}
               size="md"
               fontSize="xl"
               fontWeight="semibold"
@@ -82,6 +83,7 @@ export const RankCard = ({
               onChange={(e) => onChangeUserName(id, i, e)}
             />
             <Button
+              tabIndex={-1}
               color="white"
               variant="outline"
               border="2px"
