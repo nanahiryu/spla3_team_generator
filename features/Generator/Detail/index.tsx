@@ -35,8 +35,8 @@ const GroupDetailPage = () => {
   // });
 
   useEffect(() => {
-    setGroupId(location.pathname.split("/")[2]);
-  }, []);
+    setGroupId(router.query.groupId as string);
+  }, [router]);
 
   useEffect(() => {
     try {
