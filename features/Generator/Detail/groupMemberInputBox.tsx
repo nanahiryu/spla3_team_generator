@@ -35,8 +35,24 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
       startLoading();
       fetchRankStateList();
       fetchPreviousGroupMembers();
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      if (err instanceof Error) {
+        toast({
+          title: err.message,
+          status: "error",
+          duration: 3000,
+          position: "top",
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "グループメンバーの取得に失敗しました",
+          status: "error",
+          duration: 3000,
+          position: "top",
+          isClosable: true,
+        });
+      }
     } finally {
       stopLoading();
     }
@@ -146,7 +162,23 @@ const GroupMemberInputBox = (props: GroupMemberInputBoxProps) => {
         setRespTeamData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        if (err instanceof Error) {
+          toast({
+            title: err.message,
+            status: "error",
+            duration: 3000,
+            position: "top",
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: "チームメンバーの作成に失敗しました",
+            status: "error",
+            duration: 3000,
+            position: "top",
+            isClosable: true,
+          });
+        }
       })
       .finally(() => {
         stopLoading();

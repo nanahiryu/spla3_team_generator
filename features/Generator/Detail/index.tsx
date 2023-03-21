@@ -42,14 +42,24 @@ const GroupDetailPage = () => {
     if (!groupId) return;
     try {
       fetchGroupName();
-    } catch (error) {
-      toast({
-        title: "グループ名の取得に失敗しました",
-        status: "error",
-        duration: 3000,
-        position: "top",
-        isClosable: true,
-      });
+    } catch (err) {
+      if (err instanceof Error) {
+        toast({
+          title: err.message,
+          status: "error",
+          duration: 3000,
+          position: "top",
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "グループ名の取得に失敗しました",
+          status: "error",
+          duration: 3000,
+          position: "top",
+          isClosable: true,
+        });
+      }
     }
   }, [groupId]);
 

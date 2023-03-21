@@ -1,4 +1,4 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { TeamData } from ".";
 import { TeamResultsCard } from "../../../components/organisms/TeamResultsCard";
@@ -15,6 +15,7 @@ type ResultBoxProps = {
 const ResultBox = (props: ResultBoxProps) => {
   const { groupId, startLoading, stopLoading, respTeamData, setRespTeamData } =
     props;
+  const toast = useToast();
   const reroleMembers = (groupId: string | string[] | undefined) => {
     // get requestでgroupIdをqueryで渡す
     if (typeof groupId !== "string") {
@@ -32,7 +33,23 @@ const ResultBox = (props: ResultBoxProps) => {
         setRespTeamData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        if (err instanceof Error) {
+          toast({
+            title: err.message,
+            status: "error",
+            duration: 3000,
+            position: "top",
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: "チーム分け中に予期せぬエラーが発生しました",
+            status: "error",
+            duration: 3000,
+            position: "top",
+            isClosable: true,
+          });
+        }
       })
       .finally(() => {
         stopLoading();
