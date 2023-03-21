@@ -39,6 +39,7 @@ const GroupDetailPage = () => {
   }, [router]);
 
   useEffect(() => {
+    if (!groupId) return;
     try {
       fetchGroupName();
     } catch (error) {
